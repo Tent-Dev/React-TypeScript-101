@@ -1,26 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { fillpassword, mydata } from './fn_security/auth';
+import { useDispatch, connect } from "react-redux";
 
-function App() {
+function App(props: any) {
+
+  let [password, setPassword] = useState('');
+  let [fade, setFade] = useState(false);
+  const dispatch = useDispatch();
+
+  function sendPassword(input: string) {
+    if(fillpassword(input)){
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        data: mydata
+      });
+      setFade(true);
+    }
+    else{
+      setPassword('')
+    }
+  }
+
+  console.log(props.post);
+
   return (
-    <div className="App">
+    <div className={`App`}>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+        {Object.keys(props.post).length === 0 ?
+          <div className={`${fade ? 'fadeOut' : ''}`}>
+            <input type={'password'} placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}></input>
+            <br></br>
+            <button onClick={() => sendPassword(password)}>Login</button>
+          </div> : <></>
+  
+        }
+        
+
+        {fade || props.post !== 'undefined' ?
+          <div className={`${fade ? 'fadeIn' : ''}`}>
+            Welcome {props.post.nickname}
+          </div> : <></>  
+        }
       </header>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state: any) => ({ post: state })
+
+export default connect(mapStateToProps)(App) ;
