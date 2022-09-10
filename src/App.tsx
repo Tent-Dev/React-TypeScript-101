@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { fillpassword, mydata } from './fn_security/auth';
@@ -9,6 +9,10 @@ function App(props: any) {
   let [password, setPassword] = useState('');
   let [fade, setFade] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(props.post);
+  },[]);
 
   function sendPassword(input: string) {
     if(fillpassword(input)){
@@ -22,8 +26,6 @@ function App(props: any) {
       setPassword('')
     }
   }
-
-  console.log(props.post);
 
   return (
     <div className={`App`}>
